@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Película - Cuevana8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #141414;
+            color: #fff;
+        }
+        
+        header {
+            background-color: #000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 40px;
+        }
+        
+        .movie-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .movie-poster {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .movie-poster img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        .movie-info {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .movie-title {
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+        
+        .movie-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+        
+        .movie-year, .movie-genres, .movie-director {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .movie-description {
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .trailer-container {
+            margin-top: 40px;
+            width: 100%;
+        }
+        
+        .trailer-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .trailer-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .back-button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .back-button:hover {
+            background-color: #f40612;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabecera -->
+    <header>
+        <a href="inicio.html"><img src="logo.png" alt="Cuevana8" class="logo"></a>
+        <a href="profile.html">
+            <div class="profile-button" id="profileInitial"></div>
+        </a>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="movie-container" id="movieContainer">
+        <!-- Los datos de la película se cargarán aquí dinámicamente -->
+    </div>
+
+    <script>
+        // Cargar datos de la película cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Obtener ID de la película de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieId = urlParams.get('id');
+            
+            if (!movieId) {
+                window.location.href = 'inicio.html';
+                return;
+            }
+            
+            // Cargar datos de la película
+            await loadMovie(movieId);
+            
+            // Cargar inicial del perfil
+            loadProfileInitial();
+        });
+        
+        // Función para cargar los datos de la película
+        async function loadMovie(movieId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/movies/${movieId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Película no encontrada');
+                }
+                
+                const movie = await response.json();
+                renderMovie(movie);
+            } catch (error) {
+                console.error('Error cargando película:', error);
+                alert('Error al cargar la película');
+                window.location.href = 'inicio.html';
+            }
+        }
+        
+        // Función para mostrar los datos de la película
+        function renderMovie(movie) {
+            const container = document.getElementById('movieContainer');
+            
+            // Formatear géneros
+            const genres = movie.genre ? movie.genre.join(', ') : 'No especificado';
+            
+            container.innerHTML = `
+                <div class="movie-poster">
+                    <img src="${movie.posterUrl}" alt="${movie.title}">
+                </div>
+                <div class="movie-info">
+                    <h1 class="movie-title">${movie.title}</h1>
+                    <div class="movie-meta">
+                        ${movie.year ? `<span class="movie-year">📅 ${movie.year}</span>` : ''}
+                        <span class="movie-genres">🎭 ${genres}</span>
+                        ${movie.director ? `<span class="movie-director">🎬 ${movie.director}</span>` : ''}
+                    </div>
+                    <p class="movie-description">${movie.description || 'Descripción no disponible'}</p>
+                    
+                    ${movie.trailerUrl ? `
+                    <div class="trailer-container">
+                        <h2 class="trailer-title">Tráiler</h2>
+                        <iframe 
+                            class="trailer-video" 
+                            src="${embedTrailerUrl(movie.trailerUrl)}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    ` : ''}
+                    
+                    <button class="back-button" onclick="window.location.href='inicio.html'">Volver al inicio</button>
+                </div>
+            `;
+        }
+        
+        // Función para convertir URL de YouTube en embed
+        function embedTrailerUrl(url) {
+            if (!url) return '';
+            
+            // Si ya es una URL de embed, devolverla tal cual
+            if (url.includes('embed')) return url;
+            
+            // Extraer ID de video de YouTube
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            
+            if (match && match[2].length === 11) {
+                return `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0`;
+            }
+            
+            return url;
+        }
+        
+        // Función para cargar la inicial del perfil
+        async function loadProfileInitial() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                
+                const response = await fetch('http://localhost:5000/api/users/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await response.json();
+                
+                const initial = (user.name?.[0] || user.username?.[0] || 'B').toUpperCase();
+                document.getElementById('profileInitial').textContent = initial;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

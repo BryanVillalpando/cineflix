@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuevana8 - Películas y Series</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style de inicio.css">
+</head>
+<body>
+    <!-- Cabecera del sitio -->
+    <header>
+        <a href="inicio.html"><img src="logo.png" alt="Cuevana8"></a>
+    <!-- Navegación principal -->
+    <nav>
+        <a href="#">Categorías</a>
+        <a href="#">Historial</a>
+    </nav>
+    
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+        <input type="text" placeholder="Buscar películas, series...">
+        <button>Buscar</button>
+    </div>
+    
+    <!-- Botón de perfil -->
+<a href="profile.html">
+    <div class="profile-button" id="profileInitial"></div>
+</a>
+</header>
+
+<!-- Contenedor principal -->
+<div class="contenedor">
+    <!-- Sección de películas destacadas -->
+    <div class="categoria">
+        <h2>Películas destacadas</h2>
+        <div class="carousel" id="featuredMovies">
+            <!-- Las películas se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Sección de películas por género (opcional) -->
+    <div class="categoria">
+        <h2>Películas de terror</h2>
+        <div class="carousel" id="horrorMovies">
+            <!-- Las películas de terror se cargarán aquí -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Verificar si el usuario está autenticado
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Si no hay token, redirigir al login
+            window.location.href = 'login.html';
+        }
+    });
+</script>
+<script>
+// Cargar inicial del usuario al abrir la página
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/users/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const user = await response.json();
+        
+        const initial = (user.name?.[0] || user.username?.[0] || 'B').toUpperCase();
+        document.getElementById('profileInitial').textContent = initial;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+</script>
+<script>
+// Función para cargar y mostrar películas
+async function loadMovies() {
+    try {
+        const response = await fetch('http://localhost:5000/api/movies');
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar películas');
+        }
+        
+        const movies = await response.json();
+        renderMovies(movies);
+    } catch (error) {
+        console.error('Error cargando películas:', error);
+    }
+}
+
+// Función para renderizar películas
+function renderMovies(movies) {
+    const featuredContainer = document.getElementById('featuredMovies');
+    const horrorContainer = document.getElementById('horrorMovies');
+    
+    // Limpiar contenedores
+    featuredContainer.innerHTML = '';
+    horrorContainer.innerHTML = '';
+    
+    // Ordenar películas por fecha de creación (más recientes primero)
+    const sortedMovies = [...movies].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // Mostrar las 6 películas más recientes en destacadas
+    sortedMovies.slice(0, 6).forEach(movie => {
+        featuredContainer.innerHTML += createMovieCard(movie);
+    });
+    
+    // Mostrar películas de terror (filtrando por género)
+    const horrorMovies = movies.filter(movie => 
+        movie.genre && movie.genre.some(g => g.toLowerCase().includes('terror'))
+).slice(0, 6);
+    
+    horrorMovies.forEach(movie => {
+        horrorContainer.innerHTML += createMovieCard(movie);
+    });
+}
+
+// Función para crear la tarjeta de película
+function createMovieCard(movie) {
+    return `
+        <div class="pelicula">
+            <a href="detalle.html?id=${movie._id}">
+                <img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.src='placeholder.jpg'">
+                <div class="titulo">${movie.title}</div>
+            </a>
+        </div>
+    `;
+}
+
+// Cargar películas cuando la página esté lista
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Cargar inicial del perfil
+    loadProfileInitial();
+    
+    // Cargar películas
+    loadMovies();
+});
+
+// Función para cargar la inicial del perfil
+async function loadProfileInitial() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const response = await fetch('http://localhost:5000/api/users/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const user = await response.json();
+        
+        const initial = (user.name?.[0] || user.username?.[0] || 'B').toUpperCase();
+        document.getElementById('profileInitial').textContent = initial;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+</script>
+</body>
+</html>

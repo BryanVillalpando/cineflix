@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - Cineflix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Panel de Administración</h1>
+    <nav>
+        <button id="moviesTab" class="tab-button active">Películas</button>
+        <button id="usersTab" class="tab-button">Usuarios</button>
+        <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+    </nav>
+  </header>
+
+  <main class="admin-container">
+    <!-- Sección Películas -->
+    <section id="moviesSection" class="content-section active-section">
+      <div class="section-header">
+        <h2>Gestión de Películas</h2>
+        <button id="addMovieBtn" class="action-button">+ Añadir Película</button>
+      </div>
+      
+      <div class="movies-grid" id="moviesList">
+        <!-- Películas se cargarán aquí dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Sección Usuarios -->
+    <section id="usersSection" class="content-section">
+      <div class="section-header">
+        <h2>Gestión de Usuarios</h2>
+      </div>
+      
+      <table id="usersTable" class="data-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Usuarios se cargarán aquí dinámicamente -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal para añadir/editar películas -->
+  <div id="movieModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle">Añadir Nueva Película</h2>
+    <form id="movieForm">
+      <div class="form-group">
+        <label for="movieTitle">Título*</label>
+        <input type="text" id="movieTitle" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="movieDescription">Descripción*</label>
+        <textarea id="movieDescription" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="movieDirector">Director</label>
+        <input type="text" id="movieDirector">
+      </div>
+      
+      <div class="form-group">
+        <label for="movieYear">Año</label>
+        <input type="number" id="movieYear" min="1900" max="2030">
+      </div>
+      
+      <div class="form-group">
+        <label for="movieGenre">Géneros* (separados por comas)</label>
+        <input type="text" id="movieGenre" placeholder="Acción, Drama, Comedia" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="moviePoster">URL del Póster*</label>
+        <input type="url" id="moviePoster" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="movieTrailer">URL del Tráiler (opcional)</label>
+        <input type="url" id="movieTrailer">
+      </div>
+      
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
+  <script src="admin.js"></script>
+</body>
+</html>

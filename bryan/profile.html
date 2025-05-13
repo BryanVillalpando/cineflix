@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Cineflix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="profile-page.css">
+</head>
+<body>
+  <header class="profile-header">
+    <a href="inicio.html" class="logo-link">
+      <img src="logo.png" alt="Cineflix" class="logo">
+    </a>
+    <nav class="profile-nav">
+      <a href="inicio.html">Inicio</a>
+      <a href="#" id="logoutBtn">Cerrar sesión</a>
+    </nav>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-header">
+      <h1>Mi Perfil</h1>
+      <button id="editProfileBtn" class="edit-btn">Editar perfil</button>
+    </div>
+
+    <div class="profile-content">
+      <div class="profile-avatar">
+        <div class="avatar" id="userAvatar">B</div>
+        <button class="avatar-btn">Cambiar foto</button>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-group">
+          <label>Nombre</label>
+          <input type="text" id="name" placeholder="Tu nombre completo" disabled>
+        </div>
+        
+        <div class="info-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="email" placeholder="tu@email.com" disabled>
+        </div>
+
+        <h2 class="section-title">Cambiar contraseña</h2>
+        
+        <div class="info-group">
+          <label>Contraseña actual</label>
+          <input type="password" id="currentPassword" placeholder="••••••" disabled>
+        </div>
+        
+        <div class="info-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="newPassword" placeholder="••••••" disabled>
+        </div>
+        
+        <div class="info-group">
+          <label>Confirmar contraseña</label>
+          <input type="password" id="confirmPassword" placeholder="••••••" disabled>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" id="cancelBtn" class="cancel-btn" disabled>Cancelar</button>
+          <button type="button" id="saveBtn" class="save-btn" disabled>Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="profile.js"></script>
+</body>
+</html>
