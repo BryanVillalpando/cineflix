@@ -28,7 +28,7 @@ async function loadProfileInitial() {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch('http://localhost:5000/api/users/me', {
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/users/me', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -47,7 +47,7 @@ async function loadProfileInitial() {
 // Función para cargar y mostrar películas
 async function loadMovies() {
     try {
-        const response = await fetch('http://localhost:5000/api/movies');
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/movies');
 
         if (!response.ok) {
             throw new Error('Error al cargar películas');

@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fetchUserData(token) {
-    const response = await fetch('http://localhost:5000/api/users/me', {
+    const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/users/me', {
         headers: { 
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ function switchTab(tabName) {
 // Cargar películas desde la API
 async function loadMovies() {
     try {
-        const response = await fetch('http://localhost:5000/api/movies');
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/movies');
         
         if (!response.ok) {
             throw new Error('Error al cargar películas');
@@ -172,7 +172,7 @@ function renderMovies(movies) {
 async function loadUsers() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/admin/users', {
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/admin/users', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -247,7 +247,7 @@ async function deleteUser(userId) {
     
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+        const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/admin/users/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -299,7 +299,7 @@ function showMovieForm(movieId = null) {
 }
 async function createMovie(movieData, token) {
     try {
-        const response = await fetch('http://localhost:5000/api/movies', {
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/movies', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -330,7 +330,7 @@ async function createMovie(movieData, token) {
 
 // Actualizar película existente
 async function updateMovie(movieId, movieData, token) {
-    const response = await fetch(`http://localhost:5000/api/movies/${movieId}`, {
+    const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/movies/${movieId}`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -397,7 +397,7 @@ async function handleMovieSubmit(e) {
 // Editar película
 async function editMovie(movieId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/movies/${movieId}`);
+        const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/movies/${movieId}`);
         
         if (!response.ok) {
             throw new Error('Error al cargar película');
@@ -440,7 +440,7 @@ async function deleteMovie(movieId) {
     
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/movies/${movieId}`, {
+        const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/movies/${movieId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -465,7 +465,7 @@ async function deleteMovie(movieId) {
 async function toggleUserStatus(userId, isCurrentlyActive) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/status`, {
+        const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/admin/users/${userId}/status`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -496,7 +496,7 @@ async function makeUserAdmin(userId) {
     
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/role`, {
+        const response = await fetch(`https://cineflix-api-zr5o.onrender.com/api/admin/users/${userId}/role`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,

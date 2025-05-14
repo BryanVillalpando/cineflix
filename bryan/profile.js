@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Enviar al backend
-            const response = await fetch('http://localhost:5000/api/users/profile', {
+            const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar datos del usuario
     async function loadUserData() {
     try {
-        const response = await fetch('http://localhost:5000/api/users/me', {
+        const response = await fetch('https://cineflix-api-zr5o.onrender.com/api/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
