@@ -6,7 +6,7 @@ exports.getUsers = async (req, res, next) => {
         res.json({
             success: true,
             count: users.length,
-            users // Envía como propiedad de un objeto
+            users
         });
     } catch (error) {
         next(error);

@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cambiar foto de perfil
     avatarBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        // Esto sería reemplazado por un input file real en producción
         const newInitial = prompt('Ingresa una nueva inicial para tu avatar (1 carácter)');
         if (newInitial && newInitial.length === 1) {
             userAvatar.textContent = newInitial.toUpperCase();

@@ -8,7 +8,7 @@ async function createAdmin() {
   
   const adminExists = await User.findOne({ username: 'admin' });
   if (adminExists) {
-    console.log('✅ El usuario admin ya existe');
+    console.log('El usuario admin ya existe');
     return;
   }
 
@@ -22,10 +22,10 @@ async function createAdmin() {
     role: 'admin'
   });
 
-  console.log('🛠️  Usuario admin creado:');
-  console.log('👤 Usuario: admin');
-  console.log('🔑 Contraseña: Admin1234');
-  console.log('⚠️ Cambia esta contraseña después del primer acceso!');
+  console.log('Usuario admin creado:');
+  console.log('Usuario: admin');
+  console.log('Contraseña: Admin1234');
+  console.log('Cambia esta contraseña después del primer acceso!');
 }
 
 createAdmin().then(() => process.exit());

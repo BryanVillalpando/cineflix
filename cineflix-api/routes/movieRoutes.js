@@ -102,5 +102,89 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+/**
+ * @route GET /api/movies
+ * @desc Obtener películas con filtros
+ * @access Public
+ */
+router.get('/', async (req, res) => {
+    try {
+        const { limit, sort, genre } = req.query;
+        let query = {};
+        
+        if (genre) {
+            query.genre = { $regex: genre, $options: 'i' };
+        }
 
+        let dbQuery = Movie.find(query);
+        
+        if (sort) {
+            dbQuery = dbQuery.sort(sort);
+        }
+        
+        if (limit) {
+            dbQuery = dbQuery.limit(parseInt(limit));
+        }
+
+        const movies = await dbQuery.exec();
+        res.json(movies);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener películas',
+            error: error.message
+        });
+    }
+});
+
+/**
+ * @route GET /api/movies/search
+ * @desc Buscar películas por título o género
+ * @access Public
+ */
+router.get('/search', async (req, res) => {
+    try {
+        const { query, genre } = req.query;
+        
+        if (!query && !genre) {
+            return res.status(400).json({
+                success: false,
+                message: 'Debe proporcionar un término de búsqueda o género'
+            });
+        }
+
+        const searchConditions = [];
+        
+        if (query) {
+            searchConditions.push({
+                $or: [
+                    { title: { $regex: query, $options: 'i' } },
+                    { genre: { $regex: query, $options: 'i' } }
+                ]
+            });
+        }
+        
+        if (genre) {
+            searchConditions.push({
+                genre: { $regex: genre, $options: 'i' }
+            });
+        }
+
+        const movies = await Movie.find(
+            searchConditions.length > 0 ? { $and: searchConditions } : {}
+        );
+
+        res.json({
+            success: true,
+            count: movies.length,
+            data: movies
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al buscar películas',
+            error: error.message
+        });
+    }
+});
 module.exports = router;

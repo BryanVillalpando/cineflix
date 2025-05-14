@@ -89,7 +89,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // 4. Generar token y responder
+    //Generar token y responder
     res.json({
       success: true,
       token: generateToken(user._id),

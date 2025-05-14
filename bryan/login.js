@@ -5,12 +5,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const passwordInput = document.getElementById('password');
     const errorElement = document.getElementById('errorMessage');
     
-    // Resetear mensajes de error
     errorElement.textContent = '';
     usernameInput.classList.remove('input-error');
     passwordInput.classList.remove('input-error');
     
-    // Mostrar carga
+
     const submitBtn = e.target.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Iniciando...';
@@ -30,10 +29,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const data = await response.json();
         
         if (!response.ok) {
-            // Mostrar error específico
             errorElement.textContent = data.message || 'Credenciales incorrectas';
             
-            // Resaltar campos con error
             if (data.errorCode === 'USER_NOT_FOUND') {
                 usernameInput.classList.add('input-error');
             } else if (data.errorCode === 'INVALID_PASSWORD') {
@@ -43,12 +40,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             return;
         }
         
-        // Guardar token y redirigir
-        // Guardar token y redirigir
+
 localStorage.setItem('token', data.token);
 localStorage.setItem('user', JSON.stringify(data.user));
 
-// Redirección basada en el rol
 if (data.user && data.user.role === 'admin') {
     window.location.href = 'admin.html';
 } else {
